@@ -1,14 +1,14 @@
 <!doctype html>
 <html>
 	<head>
-		<title>Quadtree-js</title>
+		<title>Quadtree-circles-js</title>
 		<link rel="stylesheet" type="text/css" href="style.css" />
 	</head>
 	<body>
 
 		<div class="outer">
 			
-			<h1><a href="https://github.com/timohausmann/quadtree-js">quadtree-js</a> <small>simple example</small></h1>
+			<h1><a href="https://github.com/jacobbrunson/quadtree-circles-js">quadtree-circles-js</a> <small>simple example</small></h1>
 			
 			<div id="canvasContainer">
 				<canvas id="canvas" width="640" height="480"></canvas>
@@ -50,8 +50,7 @@ var myTree = new Quadtree({
 var myObject = {
 	x: 200,
 	y: 100,
-	width: 35,
-	height: 70
+	radius: 40
 }
 
 myTree.insert( myObject );
@@ -66,8 +65,7 @@ myTree.insert( myObject );
 var myCursor = {
 	x: mouseX,
 	y: mouseY,
-	width: 20,
-	height: 20
+	radius: 20
 };
 
 var candidates = myTree.retrieve( myCursor );
@@ -96,7 +94,7 @@ myTree.clear();
 			</pre>
 
 			<p>
-				<a href="https://github.com/timohausmann/quadtree-js">quadtree-js at github</a>
+				<a href="https://github.com/jacobbrunson/quadtree-circles-js">quadtree-circles-js at github</a>
 			</p>
 			
 		</div>
@@ -141,8 +139,7 @@ myTree.clear();
 			var myCursor = {
 				x : 0,
 				y : 0,
-				width : 28,
-				height : 28
+				radius : 28,
 			};
 
 			var isMouseover = false;
@@ -166,8 +163,8 @@ myTree.clear();
 					e.offsetY = e.layerY - e.target.offsetTop;
 				} 
 				
-				myCursor.x = e.offsetX - (myCursor.width/2);
-				myCursor.y = e.offsetY - (myCursor.height/2);		
+				myCursor.x = e.offsetX;
+				myCursor.y = e.offsetY;
 			};
 
 
@@ -193,8 +190,7 @@ myTree.clear();
 				var rndObj = {
 					x : randMinMax(0, gridh, true)*grid,
 					y : randMinMax(0, gridv, true)*grid,
-					width : randMinMax(1, 4, true)*grid,
-					height : randMinMax(1, 4, true)*grid,
+					radius : randMinMax(1, 4, true)*grid,
 					check : false
 				};
 
@@ -255,12 +251,14 @@ myTree.clear();
 					
 					obj = myObjects[ i ];
 					
+					ctx.beginPath();
+					ctx.arc(obj.x, obj.y, obj.radius, 0, Math.PI*2, true);
 					if( obj.check ) {
 						ctx.fillStyle = 'rgba(48,255,48,0.5)';
-						ctx.fillRect( obj.x, obj.y, obj.width, obj.height );
+						ctx.fill();
 					} else {
 						ctx.strokeStyle = 'rgba(255,255,255,0.5)';
-						ctx.strokeRect( obj.x, obj.y, obj.width, obj.height );
+						ctx.stroke();
 					}
 					
 					
@@ -303,7 +301,9 @@ myTree.clear();
 				if( isMouseover ) {
 
 					ctx.fillStyle = 'rgba(255,255,255,0.5)';
-					ctx.fillRect( myCursor.x, myCursor.y, myCursor.width, myCursor.height );
+					ctx.beginPath();
+					ctx.arc(myCursor.x, myCursor.y, myCursor.radius, 0, Math.PI*2, true);
+					ctx.fill();
 					
 					//retrieve all objects in the bounds of the hero 
 					candidates = myTree.retrieve( myCursor );

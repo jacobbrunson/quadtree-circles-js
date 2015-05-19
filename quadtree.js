@@ -1,13 +1,13 @@
 /*
- * Javascript Quadtree 
- * @version 1.1.1
+ * Javascript Quadtree w/ Circles
+ * @version 1.0
  * @licence MIT
- * @author Timo Hausmann
- * https://github.com/timohausmann/quadtree-js/
+ * @author Timo Hausmann & Jacob Brunson
+ * https://github.com/jacobbrunson/quadtree-circles-js/
  */
  
 /*
- Copyright © 2012 Timo Hausmann
+ Copyright © 2015 Timo Hausmann & Jacob Brunson
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -56,11 +56,11 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 */
 	Quadtree.prototype.split = function() {
 		
-		var 	nextLevel	= this.level + 1,
+		var nextLevel	= this.level + 1,
 			subWidth	= Math.round( this.bounds.width / 2 ),
 			subHeight 	= Math.round( this.bounds.height / 2 ),
-			x 		= Math.round( this.bounds.x ),
-			y 		= Math.round( this.bounds.y );		
+			x 			= Math.round( this.bounds.x ),
+			y 			= Math.round( this.bounds.y );		
 	 
 	 	//top right node
 		this.nodes[0] = new Quadtree({
@@ -98,31 +98,31 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	
 	/*
 	 * Determine which node the object belongs to
-	 * @param Object pRect		bounds of the area to be checked, with x, y, width, height
-	 * @return Integer		index of the subnode (0-3), or -1 if pRect cannot completely fit within a subnode and is part of the parent node
+	 * @param Object pCirc		bounds of the area to be checked, with x, y, radius
+	 * @return Integer		index of the subnode (0-3), or -1 if pCirc cannot completely fit within a subnode and is part of the parent node
 	 */
-	Quadtree.prototype.getIndex = function( pRect ) {
+	Quadtree.prototype.getIndex = function( pCirc ) {
 		
 		var 	index 			= -1,
 			verticalMidpoint 	= this.bounds.x + (this.bounds.width / 2),
 			horizontalMidpoint 	= this.bounds.y + (this.bounds.height / 2),
 	 
-			//pRect can completely fit within the top quadrants
-			topQuadrant = (pRect.y < horizontalMidpoint && pRect.y + pRect.height < horizontalMidpoint),
+			//pCirc can completely fit within the top quadrants
+			topQuadrant = (pCirc.y + pCirc.radius < horizontalMidpoint),
 			
-			//pRect can completely fit within the bottom quadrants
-			bottomQuadrant = (pRect.y > horizontalMidpoint);
+			//pCirc can completely fit within the bottom quadrants
+			bottomQuadrant = (pCirc.y - pCirc.radius > horizontalMidpoint);
 		 
-		//pRect can completely fit within the left quadrants
-		if( pRect.x < verticalMidpoint && pRect.x + pRect.width < verticalMidpoint ) {
+		//pCirc can completely fit within the left quadrants
+		if( pCirc.x + pCirc.radius < verticalMidpoint ) {
 			if( topQuadrant ) {
 				index = 1;
 			} else if( bottomQuadrant ) {
 				index = 2;
 			}
 			
-		//pRect can completely fit within the right quadrants	
-		} else if( pRect.x > verticalMidpoint ) {
+		//pCirc can completely fit within the right quadrants	
+		} else if( pCirc.x - pCirc.radius > verticalMidpoint ) {
 			if( topQuadrant ) {
 				index = 0;
 			} else if( bottomQuadrant ) {
@@ -138,24 +138,24 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * Insert the object into the node. If the node
 	 * exceeds the capacity, it will split and add all
 	 * objects to their corresponding subnodes.
-	 * @param Object pRect		bounds of the object to be added, with x, y, width, height
+	 * @param Object pCirc		bounds of the object to be added, with x, y, radius
 	 */
-	Quadtree.prototype.insert = function( pRect ) {
+	Quadtree.prototype.insert = function( pCirc ) {
 		
 		var 	i = 0,
 	 		index;
 	 	
 	 	//if we have subnodes ...
 		if( typeof this.nodes[0] !== 'undefined' ) {
-			index = this.getIndex( pRect );
+			index = this.getIndex( pCirc );
 	 
 		  	if( index !== -1 ) {
-				this.nodes[index].insert( pRect );	 
+				this.nodes[index].insert( pCirc );	 
 			 	return;
 			}
 		}
 	 
-	 	this.objects.push( pRect );
+	 	this.objects.push( pCirc );
 		
 		if( this.objects.length > this.max_objects && this.level < this.max_levels ) {
 			
@@ -181,25 +181,25 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 
 	/*
 	 * Return all objects that could collide with the given object
-	 * @param Object pRect		bounds of the object to be checked, with x, y, width, height
+	 * @param Object pCirc		bounds of the object to be checked, with x, y, radius
 	 * @Return Array		array with all detected objects
 	 */
-	Quadtree.prototype.retrieve = function( pRect ) {
+	Quadtree.prototype.retrieve = function( pCirc ) {
 	 	
-		var 	index = this.getIndex( pRect ),
+		var 	index = this.getIndex( pCirc ),
 			returnObjects = this.objects;
 			
 		//if we have subnodes ...
 		if( typeof this.nodes[0] !== 'undefined' ) {
 			
-			//if pRect fits into a subnode ..
+			//if pCirc fits into a subnode ..
 			if( index !== -1 ) {
-				returnObjects = returnObjects.concat( this.nodes[index].retrieve( pRect ) );
+				returnObjects = returnObjects.concat( this.nodes[index].retrieve( pCirc ) );
 				
-			//if pRect does not fit into a subnode, check it against all subnodes
+			//if pCirc does not fit into a subnode, check it against all subnodes
 			} else {
 				for( var i=0; i < this.nodes.length; i=i+1 ) {
-					returnObjects = returnObjects.concat( this.nodes[i].retrieve( pRect ) );
+					returnObjects = returnObjects.concat( this.nodes[i].retrieve( pCirc ) );
 				}
 			}
 		}

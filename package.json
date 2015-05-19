@@ -1,7 +1,7 @@
 {
-  "name": "quadtree-js",
-  "version": "1.1.0",
-  "description": "Another quadtree implementation for javascript",
+  "name": "quadtree-circles-js",
+  "version": "1.0",
+  "description": "Another circular quadtree implementation for javascript",
   "main": "quadtree.js",
   "directories": {
     "example": "examples"
@@ -11,15 +11,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/timohausmann/quadtree-js.git"
+    "url": "https://github.com/jacobbrunson/quadtree-circles-js.git"
   },
   "keywords": [
-    "quadtree"
+    "quadtree",
+    "circles",
+    "circular"
   ],
-  "author": "Timo Hausmann",
+  "author": "Jacob Brunson",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/timohausmann/quadtree-js/issues"
+    "url": "https://github.com/jacobbrunson/quadtree-circles-js/issues"
   },
   "devDependencies": {
     "grunt": "~0.4.4",

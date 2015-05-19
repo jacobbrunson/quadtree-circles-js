@@ -1,14 +1,14 @@
 <!doctype html>
 <html>
 	<head>
-		<title>Quadtree-js</title>
+		<title>Quadtree-circles-js</title>
 		<link rel="stylesheet" type="text/css" href="style.css" />
 	</head>
 	<body>
 
 		<div class="outer">
 			
-			<h1><a href="https://github.com/timohausmann/quadtree-js">quadtree-js</a> <small>dynamic example</small></h1>
+			<h1><a href="https://github.com/jacobbrunson/quadtree-circles-js">quadtree-circles-js</a> <small>dynamic example</small></h1>
 			
 			<div id="canvasContainer">
 				<canvas id="canvas" width="640" height="480"></canvas>
@@ -37,7 +37,7 @@ var myTree = new Quadtree({
 });
 			</pre>
 			<p>
-				Next, lets create some objects. Objects that we plan to insert into the quadtree need x, y, width and height properties in order to work. 
+				Next, lets create some objects. Objects that we plan to insert into the quadtree need x, y, and radius properties in order to work. 
 			</p>
 			<p>
 				You can add as many other properties as you like. In this example, we use custom properties vx, vy and check.
@@ -49,8 +49,7 @@ for( var i=0;i&lt;200;i=i+1 ) {
 	myObjects.push({
 		x : randMinMax(0, 640),
 		y : randMinMax(0, 480),
-		width : randMinMax(10, 20),
-		height : randMinMax(10, 20),
+		radius : randMinMax(10, 20),
 		vx: randMinMax(-0.5,0.5),
 		vy: randMinMax(-0.5,0.5),
 		check : false
@@ -87,8 +86,7 @@ function loop() {
 var myCursor = {
 	x: mouseX,
 	y: mouseY,
-	width: 20,
-	height: 20
+	radius: 20,
 };
 
 var candidates = myTree.retrieve( myCursor );
@@ -110,12 +108,9 @@ for( var i=0;i&lt;candidates.length;i=i+1 ) {
 			<p>
 				When you deal mostly with static objects, rewriting the whole tree each loop may seems like an overkill. 
 			</p>
-			<p>
-				If you have the urge to update or remove single objects without affecting the whole quadtree, you may check out the <a href="https://github.com/timohausmann/quadtree-js/tree/hitman">quadtree-js hitman branch</a>.
-			</p>
 
 			<p>
-				<a href="https://github.com/timohausmann/quadtree-js">quadtree-js at github</a>
+				<a href="https://github.com/jacobbrunson/quadtree-circles-js">quadtree-circles-js at github</a>
 			</p>
 
 		</div>
@@ -159,8 +154,7 @@ for( var i=0;i&lt;candidates.length;i=i+1 ) {
 			var myCursor = {
 				x : 0,
 				y : 0,
-				width : 20,
-				height : 20
+				radius: 20
 			};
 
 			var isMouseover = false;
@@ -184,8 +178,8 @@ for( var i=0;i&lt;candidates.length;i=i+1 ) {
 					e.offsetY = e.layerY - e.target.offsetTop;
 				} 
 				
-				myCursor.x = e.offsetX - (myCursor.width/2);
-				myCursor.y = e.offsetY - (myCursor.height/2);		
+				myCursor.x = e.offsetX;
+				myCursor.y = e.offsetY;	
 			};
 
 
@@ -206,8 +200,7 @@ for( var i=0;i&lt;candidates.length;i=i+1 ) {
 					myObjects.push({
 						x : randMinMax(0, 640),
 						y : randMinMax(0, 480),
-						width : randMinMax(10, 20),
-						height : randMinMax(10, 20),
+						radius : randMinMax(10, 20),
 						vx: randMinMax(-0.5,0.5),
 						vy: randMinMax(-0.5,0.5),
 						check : false
@@ -248,13 +241,14 @@ for( var i=0;i&lt;candidates.length;i=i+1 ) {
 				for( var i=0;i<myObjects.length;i=i+1 ) {
 					
 					obj = myObjects[ i ];
-					
+					ctx.beginPath();
+					ctx.arc(obj.x, obj.y, obj.radius, 0, Math.PI*2, true);
 					if( obj.check ) {
 						ctx.fillStyle = 'rgba(48,255,48,0.5)';
-						ctx.fillRect( obj.x, obj.y, obj.width, obj.height );
+						ctx.fill();
 					} else {
 						ctx.strokeStyle = 'rgba(255,255,255,0.5)';
-						ctx.strokeRect( obj.x, obj.y, obj.width, obj.height );
+						ctx.stroke();
 					}
 					
 					
@@ -310,7 +304,9 @@ for( var i=0;i&lt;candidates.length;i=i+1 ) {
 				if( isMouseover ) {
 
 					ctx.fillStyle = 'rgba(255,255,255,0.5)';
-					ctx.fillRect( myCursor.x, myCursor.y, myCursor.width, myCursor.height );
+					ctx.beginPath();
+					ctx.arc(myCursor.x, myCursor.y, myCursor.radius, 0, Math.PI*2, true);
+					ctx.fill();
 				
 					//retrieve all objects in the bounds of the hero 
 					candidates = myTree.retrieve( myCursor );
