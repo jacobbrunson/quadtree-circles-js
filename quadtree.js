@@ -2,13 +2,8 @@
  * Javascript Quadtree w/ Circles
  * @version 1.0
  * @licence MIT
-<<<<<<< HEAD
  * @author Timo Hausmann & Jacob Brunson
  * https://github.com/jacobbrunson/quadtree-circles-js/
-=======
- * @author Timo Hausmann
- * https://github.com/timohausmann/quadtree-circles-js/
->>>>>>> 222136bb5555ffe8f4d27af9bb2b05046512cdb1
  */
  
 /*
