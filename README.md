@@ -1,16 +1,16 @@
-# quadtree-js
+# quadtree-circles-js
 
-This is a Javascript Quadtree implementation of the Java Methods descriped in this tutorial:
-http://gamedev.tutsplus.com/tutorials/implementation/quick-tip-use-quadtrees-to-detect-likely-collisions-in-2d-space/
+This is a circular implementation of this library by Timo Hausmann:
+https://github.com/timohausmann/quadtree-js
 
-This is not a collision engine, but an algorythm to narrow down objects of possible collision. 
+This is not a collision engine, but an algorithm to narrow down objects of possible collision. 
 
 Please read the tutorial if you want to know more about Quadtrees.
 
-There are two examples: [simple](http://timohausmann.de/quadtree.js/simple.html) and [dynamic](http://timohausmann.de/quadtree.js/dynamic.html). 
+There are two examples in the examples directory. 
 
 * red squares represent Quadtree Nodes
-* empty white squares represent objects in our Quadtree
+* empty white circles represent objects in our Quadtree
 * the cursor is the area we constantly test for
 * objects turned green are candidates for collision, returned from the recieve-function
 
@@ -41,8 +41,7 @@ Insert an element in the Quadtree
 myTree.insert({
 	x : 200,
 	y : 150,
-	width : 20,
-	height : 20
+	radius : 20
 });
 </pre>
 
@@ -51,8 +50,7 @@ Retrieve elements that "collide" with the given bounds
 var elements = myTree.retrieve({
 	x : 150,
 	y : 100,
-	width : 20,
-	height : 20
+	radius : 20
 });
 </pre>
 
@@ -62,7 +60,3 @@ myTree.clear();
 </pre>
 
 Check out the examples for more information.
-Feel free to open an issue if you have any problems.
-
-There is an alternative [quadtree-js hitman branch](https://github.com/timohausmann/quadtree-js/tree/hitman) available that allows you to update and remove single objects.
-This can be handy when most of the objects in your quadtree are static.
